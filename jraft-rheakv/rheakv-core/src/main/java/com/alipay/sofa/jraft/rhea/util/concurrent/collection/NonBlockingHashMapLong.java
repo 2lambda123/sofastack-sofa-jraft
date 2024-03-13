@@ -830,7 +830,9 @@ public class NonBlockingHashMapLong<TypeV> extends AbstractMap<Long, TypeV> impl
                 // new table.  Otherwise we lost the CAS to another racing put.
                 // Simply retry from the start.
                 if (V instanceof Prime)
-                    return copy_slot_and_check(idx, expVal).putIfMatch(key, putval, expVal);
+                    {
+                        return copy_slot_and_check(idx, expVal).putIfMatch(key, putval, expVal);
+                    }
             }
             // Win or lose the CAS, we are done.  If we won then we know the update
             // happened as expected.  If we lost, it means "we won but another thread
@@ -883,7 +885,9 @@ public class NonBlockingHashMapLong<TypeV> extends AbstractMap<Long, TypeV> impl
                 if (sz >= (oldlen >> 2)) { // If we are >25% full of keys then...
                     newsz = oldlen << 1; // Double size
                     if (sz >= (oldlen >> 1)) // If we are >50% full of keys then...
-                        newsz = oldlen << 2; // Double double size
+                        {
+                            newsz = oldlen << 2;
+                        } // Double double size
                 }
             }
 
@@ -1017,7 +1021,9 @@ public class NonBlockingHashMapLong<TypeV> extends AbstractMap<Long, TypeV> impl
                 // Uncomment these next 2 lines to turn on incremental table-copy.
                 // Otherwise this thread continues to copy until it is all done.
                 if (!copy_all && panic_start == -1) // No panic?
-                    return; // Then done copying after doing MIN_COPY_WORK
+                    {
+                        return;
+                    } // Then done copying after doing MIN_COPY_WORK
             }
             // Extra promotion check, in case another thread finished all copying
             // then got stalled before promoting.
@@ -1202,13 +1208,17 @@ public class NonBlockingHashMapLong<TypeV> extends AbstractMap<Long, TypeV> impl
                 _idx = 0; // Setup for next phase of search
                 _nextK = NO_KEY;
                 if ((_nextV = get(_nextK)) != null)
-                    return _prevV;
+                    {
+                        return _prevV;
+                    }
             }
             while (_idx < length()) { // Scan array
                 _nextK = key(_idx++); // Get a key that definitely is in the set (for the moment!)
                 if (_nextK != NO_KEY && // Found something?
                     (_nextV = get(_nextK)) != null)
-                    break; // Got it!  _nextK is a valid Key
+                    {
+                        break;
+                    } // Got it!  _nextK is a valid Key
             } // Else keep scanning
             return _prevV; // Return current value.
         }
