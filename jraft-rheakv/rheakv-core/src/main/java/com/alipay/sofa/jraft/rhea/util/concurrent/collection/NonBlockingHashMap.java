@@ -908,7 +908,9 @@ public class NonBlockingHashMap<TypeK, TypeV> extends AbstractMap<TypeK, TypeV> 
             // new table.  Otherwise we lost the CAS to another racing put.
             // Simply retry from the start.
             if (V instanceof Prime)
-                return putIfMatch(topmap, chm.copy_slot_and_check(topmap, kvs, idx, expVal), key, putval, expVal);
+                {
+                    return putIfMatch(topmap, chm.copy_slot_and_check(topmap, kvs, idx, expVal), key, putval, expVal);
+                }
         }
         // Win or lose the CAS, we are done.  If we won then we know the update
         // happened as expected.  If we lost, it means "we won but another thread
@@ -1048,7 +1050,9 @@ public class NonBlockingHashMap<TypeK, TypeV> extends AbstractMap<TypeK, TypeV> 
                 // For tables less than 1M entries, if >50% full of keys then...
                 // For tables more than 1M entries, if >75% full of keys then...
                 if (4L * sz >= ((oldlen >> 20) != 0 ? 3L : 2L) * oldlen)
-                    newsz = oldlen << 2; // Double double size, so new table will be between %12.5 (18.75%) and 25% (25%)
+                    {
+                        newsz = oldlen << 2;
+                    } // Double double size, so new table will be between %12.5 (18.75%) and 25% (25%)
             }
             // This heuristic in the next 2 lines leads to a much denser table
             // with a higher reprobe rate
@@ -1201,7 +1205,9 @@ public class NonBlockingHashMap<TypeK, TypeV> extends AbstractMap<TypeK, TypeV> 
                 // Uncomment these next 2 lines to turn on incremental table-copy.
                 // Otherwise this thread continues to copy until it is all done.
                 if (!copy_all && panic_start == -1) // No panic?
-                    return; // Then done copying after doing MIN_COPY_WORK
+                    {
+                        return;
+                    } // Then done copying after doing MIN_COPY_WORK
             }
             // Extra promotion check, in case another thread finished all copying
             // then got stalled before promoting.
@@ -1388,7 +1394,9 @@ public class NonBlockingHashMap<TypeK, TypeV> extends AbstractMap<TypeK, TypeV> 
                 _nextK = key(_idx++); // Get a key that definitely is in the set (for the moment!)
                 if (_nextK != null && // Found something?
                     _nextK != TOMBSTONE && (_nextV = get(_nextK)) != null)
-                    break; // Got it!  _nextK is a valid Key
+                    {
+                        break;
+                    } // Got it!  _nextK is a valid Key
             } // Else keep scanning
             return _prevV; // Return current value.
         }
