@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.jraft.rhea.util;
 
+import io.github.pixee.security.ZipSecurity;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -88,7 +89,7 @@ public final class ZipUtil {
                                                                                                            throws IOException {
         try (final FileInputStream fis = new FileInputStream(sourceFile);
                 final CheckedInputStream cis = new CheckedInputStream(fis, checksum);
-                final ZipInputStream zis = new ZipInputStream(new BufferedInputStream(cis, BUFFER_SIZE))) {
+                final ZipInputStream zis = ZipSecurity.createHardenedInputStream(new BufferedInputStream(cis, BUFFER_SIZE))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 if (entry.isDirectory()) {
